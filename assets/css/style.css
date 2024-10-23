@@ -155,7 +155,7 @@ h6 {
   left: 0;
   top: 0;
   right: 0;
-  background: #008080;
+  background: #6d89c5;
 }
 
 #header.header-top .social-links,
@@ -795,7 +795,7 @@ section .container {
   line-height: 1;
   text-transform: uppercase;
   color: #fff;
-  background: #008080;
+  background: #6d89c5;
   margin: 0 3px 10px 3px;
   transition: all 0.3s ease-in-out;
   border-radius: 4px;
@@ -1012,7 +1012,7 @@ section .container {
 
 .contact .info-box i.bx {
   font-size: 24px;
-  color: #008080;
+  color: #6d89c5;
   border-radius: 50%;
   padding: 14px;
   float: left;
@@ -1042,14 +1042,14 @@ section .container {
 .contact .info-box .social-links a {
   font-size: 25px;
   display: inline-block;
-  color: #008080;
+  color: #6d89c5;
   line-height: 1;
   margin-right: 12px;
   transition: 0.3s;
 }
 
 .contact .info-box .social-links a:hover {
-  color: #008080;
+  color: #6d89c5;
 }
 
 .contact .php-email-form {
@@ -1073,7 +1073,7 @@ section .container {
 .contact .php-email-form .sent-message {
   display: none;
   background: rgba(255, 255, 255, 0.08);
-  background: #008080
+  background: #6d89c5;
   text-align: center;
   padding: 15px;
   font-weight: 600;
@@ -1093,7 +1093,7 @@ section .container {
   width: 24px;
   height: 24px;
   margin: 0 10px -6px 0;
-  border: 3px solid #008080;
+  border: 3px solid #6d89c5;
   border-top-color: #eee;
   animation: animate-loading 1s linear infinite;
 }
@@ -1135,7 +1135,7 @@ section .container {
 }
 
 .contact .php-email-form button[type=submit] {
-  background: #008080;
+  background: #6d89c5;
   border: 0;
   padding: 10px 30px;
   color: #fff;
@@ -1181,7 +1181,7 @@ section .container {
 }
 
 .credits a {
-  color: #008080;
+  color: #6d89c5;
   transition: 0.3s;
 }
 
