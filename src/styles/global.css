@@ -1,0 +1,150 @@
+/* Design tokens. Light theme is the default; dark follows the OS unless the visitor picks one. */
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #efebe3;
+  --text: #1b1d22;
+  --muted: #5b606b;
+  --line: #ddd7cc;
+  --accent: #1f4f8f;
+  --accent-soft: #e3ebf6;
+  --accent-2: #9a5b13;
+  --accent-2-soft: #f6ead9;
+  --focus: #2a6fd6;
+  --shadow: 0 1px 2px rgb(20 20 30 / 6%), 0 8px 24px rgb(20 20 30 / 6%);
+  --radius: 14px;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --wrap: 1120px;
+  --read: 68ch;
+  /* Motion tokens: one easing curve and three speeds keep every animation consistent. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 700ms;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #111317;
+    --surface: #181b21;
+    --surface-2: #20242c;
+    --text: #ecebe7;
+    --muted: #a3a8b3;
+    --line: #2d323c;
+    --accent: #8db4f0;
+    --accent-soft: #1d2a3f;
+    --accent-2: #e2a65e;
+    --accent-2-soft: #33271a;
+    --focus: #8db4f0;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 25%);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #111317;
+  --surface: #181b21;
+  --surface-2: #20242c;
+  --text: #ecebe7;
+  --muted: #a3a8b3;
+  --line: #2d323c;
+  --accent: #8db4f0;
+  --accent-soft: #1d2a3f;
+  --accent-2: #e2a65e;
+  --accent-2-soft: #33271a;
+  --focus: #8db4f0;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 25%);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+/* App standard F7: the page never bounces or slides sideways. */
+html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-underline-offset: 3px; transition: color var(--dur-fast) ease; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 0.5em; text-wrap: balance; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+h3 { font-size: 1.25rem; }
+p { margin: 0 0 1em; text-wrap: pretty; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+@media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+.section { padding: 72px 0; border-top: 1px solid var(--line); }
+@media (min-width: 900px) { .section { padding: 104px 0; } }
+
+.eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+.lede { font-size: 1.15rem; color: var(--muted); max-width: var(--read); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 20px; border-radius: 999px; border: 1px solid transparent;
+  font: 600 0.95rem/1 var(--font-body); text-decoration: none; cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease, box-shadow var(--dur-base) ease;
+}
+.btn:hover { transform: translateY(-2px); text-decoration: none; }
+.btn:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+.btn-primary { background: var(--accent); color: var(--bg); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, var(--text)); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn-ghost:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+/* Arrows nudge in the direction they point when their link is hovered or focused. */
+.arrow { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
+a:hover .arrow, a:focus-visible .arrow, button:hover .arrow { transform: translateX(4px); }
+a:hover .arrow-out, a:focus-visible .arrow-out { transform: translate(3px, -3px); }
+a:hover .arrow-back, a:focus-visible .arrow-back { transform: translateX(-4px); }
+
+.chip {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  font-size: 0.8rem; font-weight: 500; background: var(--surface-2); color: var(--muted);
+}
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; left: 16px; top: -48px; z-index: 100; background: var(--accent); color: var(--bg); padding: 8px 14px; border-radius: 8px; }
+.skip-link:focus { top: 12px; }
+
+/* Scroll reveal. The .js class comes from an inline script, so without JavaScript nothing is hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    transition-delay: calc(var(--reveal-index, 0) * 80ms);
+  }
+  .js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+  /* Native page transitions between the home page and case studies. Browsers without support load normally. */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-base); }
+  ::view-transition-group(*) { animation-duration: 420ms; animation-timing-function: var(--ease-out); }
+}
+
+/* App standard F5: with Reduce Motion on, every animation shows its end state at once. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

@@ -1,0 +1,55 @@
+---
+import { experience } from '../data/experience';
+
+const trackLabel = { analysis: 'Data analysis', compliance: 'Compliance', both: 'Compliance + data' } as const;
+---
+
+<section id="experience" class="section">
+  <div class="wrap">
+    <p class="eyebrow">Experience</p>
+    <h2>Where I have done the work</h2>
+    <ol class="timeline">
+      {
+        experience.map((role, index) => (
+          <li class={`role track-${role.track}`}>
+            <div class="when">
+              <span>{role.start} – {role.end}</span>
+              <span class="where">{role.location}</span>
+            </div>
+            <div class="what">
+              <span class="chip">{trackLabel[role.track]}</span>
+              <h3>{role.title}</h3>
+              <p class="company">{role.company}</p>
+              <details open={index < 3}>
+                <summary>{index < 3 ? 'Highlights' : `Show ${role.highlights.length} highlights`}</summary>
+                <ul>{role.highlights.map((item) => <li>{item}</li>)}</ul>
+              </details>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline { list-style: none; padding: 0; margin: 40px 0 0; }
+  .role { display: grid; gap: 8px 40px; padding: 28px 0; border-top: 1px solid var(--line); }
+  .role:first-child { border-top: 0; padding-top: 0; }
+  @media (min-width: 860px) { .role { grid-template-columns: 220px 1fr; } }
+  .when { display: flex; flex-direction: column; gap: 2px; font-size: 0.92rem; font-weight: 600; }
+  .where { font-weight: 400; color: var(--muted); }
+  .what { max-width: var(--read); }
+  .chip { margin-bottom: 10px; }
+  .track-compliance .chip, .track-both .chip { background: var(--accent-2-soft); color: var(--accent-2); }
+  .track-analysis .chip { background: var(--accent-soft); color: var(--accent); }
+  h3 { margin: 0; }
+  .company { color: var(--muted); margin: 2px 0 12px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--accent); width: fit-content; border-radius: 4px; }
+  summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+  details[open] ul { animation: open-list var(--dur-base) var(--ease-out); }
+  @keyframes open-list { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  details ul { margin: 12px 0 0; padding-left: 1.1em; }
+  details li { margin-bottom: 8px; }
+  details li::marker { color: var(--muted); }
+</style>

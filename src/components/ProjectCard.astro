@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const firstInsight = project.sections ? undefined : (project.insights[0] ?? project.objectives[0]);
+---
+
+<li class:list={['card', { featured: project.featured }]} data-tools={project.tools.join('|')}>
+  <a href={`${base}/projects/${project.slug}/`}>
+    <div class="thumb">
+      <Image src={project.image} style={`view-transition-name: shot-${project.slug}`} alt={`Dashboard for ${project.title}`} widths={[400, 640, 800]} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 360px" />
+    </div>
+    <div class="body">
+      <ul class="tools">
+        {project.featured && <li class="chip badge">Featured · Client work</li>}
+        {project.tools.map((tool) => <li class="chip">{tool}</li>)}
+      </ul>
+      <h3>{project.title}</h3>
+      {project.context && <p class="context">{project.context}</p>}
+      {firstInsight ? <p>{firstInsight.label ? `${firstInsight.label}. ` : ''}{firstInsight.text}</p> : <p>{project.summary}</p>}
+      <span class="more">Read the case study <span class="arrow" aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</li>
+
+<style>
+  .card { list-style: none; }
+  .card[hidden] { display: none; }
+  a { display: flex; flex-direction: column; height: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; color: inherit; text-decoration: none; transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) ease, border-color var(--dur-base) ease; }
+  a:hover, a:focus-visible { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
+  a:active { transform: translateY(-1px) scale(0.99); }
+  h3 { transition: color var(--dur-fast) ease; }
+  a:hover h3, a:focus-visible h3 { color: var(--accent); }
+  .thumb { aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+  .thumb :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: top left; transition: transform var(--dur-slow) var(--ease-out); }
+  a:hover .thumb :global(img), a:focus-visible .thumb :global(img) { transform: scale(1.04); }
+  .body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; }
+  .badge { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .context { font-size: 0.85rem; color: var(--text); opacity: 0.8; -webkit-line-clamp: 2; }
+  .featured h3 { font-size: 1.3rem; }
+  .featured .thumb { aspect-ratio: 16 / 9; }
+  h3 { font-size: 1.1rem; margin: 4px 0 0; }
+  p { font-size: 0.92rem; color: var(--muted); margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .more { margin-top: auto; padding-top: 8px; font-weight: 600; font-size: 0.9rem; color: var(--accent); }
+</style>

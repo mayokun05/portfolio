@@ -1,0 +1,135 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { projects, type Project, type Section } from '../../data/projects';
+
+export const getStaticPaths = (() =>
+  projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(index + 1) % projects.length] },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+  next: Project | undefined;
+}
+
+const { project, next } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ogImage = await getImage({ src: project.image, width: 1200, format: 'jpg', quality: 80 });
+
+const defaultSections: readonly Section[] = [
+  { heading: 'Objectives', points: project.objectives },
+  { heading: 'Key insights', points: project.insights },
+  { heading: 'Recommendations', points: project.recommendations },
+];
+const sections = (project.sections ?? defaultSections).filter((section) => section.points.length > 0);
+
+// Tableau Public serves an embeddable view at /views/... with these flags. The extra 27px fits Tableau's toolbar.
+const embedSrc = project.embedUrl ? `${project.embedUrl}?:showVizHome=no&:embed=true&:toolbar=bottom&:tabs=no` : undefined;
+const embedRatio = `${project.image.width} / ${project.image.height + 27}`;
+---
+
+<Base title={`${project.title} | Mayokun Adeniran`} description={project.summary.slice(0, 155)} image={ogImage.src}>
+  <article class="wrap">
+    <a class="back" href={`${base}/#work`}><span class="arrow arrow-back" aria-hidden="true">←</span> All case studies</a>
+    <header>
+      <ul class="tools">{project.tools.map((tool) => <li class="chip">{tool}</li>)}</ul>
+      <h1>{project.title}</h1>
+      {project.context && <p class="context">{project.context}</p>}
+      <p class="lede">{project.summary}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={project.report.url} target="_blank" rel="noopener">
+          {project.embedUrl ? 'Open' : 'View the full report'} on {project.report.host} <span class="arrow arrow-out" aria-hidden="true">↗</span>
+        </a>
+        {
+          project.liveUrl && (
+            <a class="btn btn-ghost" href={project.liveUrl.url} target="_blank" rel="noopener">
+              {project.liveUrl.label} <span class="arrow arrow-out" aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
+    </header>
+    {
+      embedSrc && (
+        <figure class="embed">
+          <iframe
+            src={embedSrc}
+            title={`Interactive Tableau dashboard: ${project.title}`}
+            loading="lazy"
+            style={`aspect-ratio: ${embedRatio}`}
+            allowfullscreen
+          />
+          <figcaption>Live dashboard. Use the filters to explore it here, or open it on {project.report.host}.</figcaption>
+        </figure>
+      )
+    }
+    <figure class:list={[{ 'embed-fallback': embedSrc }]}>
+      <a href={project.report.url} target="_blank" rel="noopener">
+        <Image src={project.image} style={`view-transition-name: shot-${project.slug}`} alt={`Dashboard for ${project.title}`} widths={[640, 1024, 1600]} sizes="(max-width: 1120px) 100vw, 1056px" loading="eager" />
+      </a>
+    </figure>
+    <div class="body">
+      {
+        sections.map((section) => (
+          <section>
+            <h2>{section.heading}</h2>
+            <ol>
+              {section.points.map((point) => (
+                <li>
+                  {point.label && <strong>{point.label}. </strong>}
+                  {point.text}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
+    </div>
+    {
+      next && (
+        <a class="next" href={`${base}/projects/${next.slug}/`}>
+          <span>Next case study</span>
+          <strong>{next.title} <span class="arrow" aria-hidden="true">→</span></strong>
+        </a>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  article { padding-top: 32px; padding-bottom: 80px; }
+  .back { display: inline-block; margin-bottom: 32px; font-weight: 500; text-decoration: none; }
+  .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+  header { max-width: 820px; }
+  .tools { list-style: none; display: flex; gap: 6px; padding: 0; margin: 0 0 16px; }
+  h1 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); }
+  .lede { margin-bottom: 28px; }
+  .context { font-weight: 500; color: var(--muted); margin: -4px 0 20px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .embed iframe { display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+  figcaption { margin-top: 10px; font-size: 0.88rem; color: var(--muted); }
+  .embed { display: none; }
+  @media (min-width: 700px) {
+    .embed { display: block; }
+    .embed-fallback { display: none; }
+  }
+  figure { margin: 48px 0; }
+  figure :global(img) { width: 100%; border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .body { max-width: var(--read); }
+  section + section { margin-top: 48px; }
+  h2 { font-size: 1.6rem; }
+  ol { padding-left: 1.3em; margin: 0; }
+  li { margin-bottom: 14px; }
+  li::marker { color: var(--muted); font-weight: 600; }
+  .next { display: grid; gap: 4px; margin-top: 72px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); text-decoration: none; color: var(--text); transition: border-color var(--dur-base) ease, background var(--dur-base) ease, box-shadow var(--dur-base) ease, transform var(--dur-base) var(--ease-out); }
+  .next:hover, .next:focus-visible { border-color: var(--accent); background: var(--accent-soft); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .next strong { transition: color var(--dur-fast) ease; }
+  .next:hover strong, .next:focus-visible strong { color: var(--accent); }
+  .next:active { transform: scale(0.99); }
+  .next span { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .next strong { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; }
+
+</style>

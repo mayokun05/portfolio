@@ -1,0 +1,47 @@
+---
+import { profile } from '../data/profile';
+---
+
+<section id="contact" class="section">
+  <div class="wrap grid">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2>Have a dataset, a dashboard or an audit coming up?</h2>
+      <p class="lede">Tell me what you need, and I will reply by email.</p>
+      <ul class="direct">
+        <li><span>Email</span><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
+        <li><span>LinkedIn</span><a href={profile.linkedin} target="_blank" rel="noopener">mayokun-adeniran</a></li>
+        <li><span>Based in</span>{profile.location}, working remotely</li>
+      </ul>
+    </div>
+    <form action={`https://formspree.io/f/${profile.formspreeId}`} method="POST">
+      <div class="pair">
+        <label>First name<input type="text" name="First Name" autocomplete="given-name" required /></label>
+        <label>Last name<input type="text" name="Last Name" autocomplete="family-name" required /></label>
+      </div>
+      <label>Email<input type="email" name="Email" autocomplete="email" required /></label>
+      <label>Subject<input type="text" name="subject" required /></label>
+      <label>Message<textarea name="Message" rows="6" required></textarea></label>
+      <button class="btn btn-primary" type="submit">Send message</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; gap: 40px; }
+  @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
+  .direct { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
+  .direct a { text-decoration: none; }
+  .direct a:hover { text-decoration: underline; }
+  .direct li { display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .direct span { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  form { display: grid; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .pair { display: grid; gap: 16px; }
+  @media (min-width: 520px) { .pair { grid-template-columns: 1fr 1fr; } }
+  label { display: grid; gap: 6px; font-size: 0.9rem; font-weight: 500; }
+  input, textarea { font: inherit; font-size: 1rem; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 100%; transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease; }
+  input:hover, textarea:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  textarea { resize: vertical; }
+  button { justify-self: start; border: 0; }
+</style>

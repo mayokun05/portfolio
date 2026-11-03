@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Services from '../components/Services.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import Experience from '../components/Experience.astro';
+import Credentials from '../components/Credentials.astro';
+import Contact from '../components/Contact.astro';
+import { profile } from '../data/profile';
+---
+
+<Base
+  title={`${profile.name} | Data Analyst and Regulatory Compliance`}
+  description="Mayokun Adeniran is a data analyst and regulatory compliance specialist in Abuja, Nigeria. Dashboards, survey analysis, data quality and upstream oil and gas compliance."
+>
+  <Hero />
+  <About />
+  <Services />
+  <ProjectGrid />
+  <Experience />
+  <Credentials />
+  <Contact />
+</Base>

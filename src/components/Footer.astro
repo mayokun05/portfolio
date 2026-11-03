@@ -1,0 +1,24 @@
+---
+import { profile } from '../data/profile';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap row">
+    <p>&copy; {year} {profile.name}</p>
+    <ul>
+      <li><a href={`mailto:${profile.email}`}>Email</a></li>
+      <li><a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href={profile.medium} target="_blank" rel="noopener">Medium</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: 0.9rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+  p { margin: 0; }
+  ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+  a { color: var(--muted); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: color var(--dur-fast) ease, background-size var(--dur-base) var(--ease-out); padding-bottom: 2px; }
+  a:hover, a:focus-visible { color: var(--accent); background-size: 100% 1px; }
+</style>

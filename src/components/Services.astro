@@ -1,0 +1,122 @@
+---
+import { serviceLines } from '../data/profile';
+---
+
+<section id="services" class="section">
+  <div class="wrap">
+    <p class="eyebrow">What I do</p>
+    <h2>Two disciplines, one standard: the numbers must hold up.</h2>
+    <div class="grid">
+      {
+        serviceLines.map((line) => (
+          <article class={`card ${line.id}`}>
+            <h3>{line.title}</h3>
+            <p>{line.summary}</p>
+            <dl class="stats">
+              {line.stats.map((stat) => (
+                <div>
+                  <dt>{stat.label}</dt>
+                  <dd data-count={stat.value}>{stat.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <dl class="groups">
+              {line.skillGroups.map((group) => (
+                <div class="group">
+                  <dt>{group.label}</dt>
+                  <dd>
+                    <ul>{group.items.map((item) => <li class="chip">{item}</li>)}</ul>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <a class="proof" href={line.proof.href}>
+              {line.proof.label} <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  h2 { max-width: 24ch; }
+  .grid { display: grid; gap: 20px; margin-top: 40px; }
+  @media (min-width: 860px) { .grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+  .card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; border-top: 4px solid var(--accent); }
+  .card.compliance { border-top-color: var(--accent-2); }
+  .card > p { color: var(--muted); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  .stats div { display: flex; flex-direction: column; justify-content: flex-start; gap: 6px; }
+  .stats dd { order: -1; }
+  .stats dd { margin: 0; font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 600; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+  @media (max-width: 519px) {
+    .stats { grid-template-columns: 1fr; gap: 14px; }
+    .stats div { display: grid; grid-template-columns: 96px 1fr; align-items: baseline; gap: 12px; }
+  }
+  .compliance .stats dd { color: var(--accent-2); }
+  .stats dt { font-size: 0.82rem; color: var(--muted); line-height: 1.35; }
+  .stats { padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .groups { display: grid; gap: 12px; margin: 0 0 28px; }
+  .group { display: grid; gap: 6px; }
+  @media (min-width: 520px) { .group { grid-template-columns: 96px 1fr; align-items: baseline; gap: 12px; } }
+  .group dt { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .group dd { margin: 0; }
+  .group ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .proof { margin-top: auto; font-weight: 600; font-size: 0.95rem; text-decoration: none; width: fit-content; }
+  .proof:hover { text-decoration: underline; }
+  .card { transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease; }
+  .card:hover { box-shadow: var(--shadow); }
+  .compliance .proof { color: var(--accent-2); }
+</style>
+
+<script>
+  // App standard U2: headline numbers count up to their value the first time they appear.
+  // The final value is already in the HTML, so without JavaScript or with Reduce Motion nothing changes.
+  const DURATION_MS = 1400;
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  interface ParsedValue {
+    prefix: string;
+    target: number;
+    suffix: string;
+  }
+
+  const parse = (raw: string): ParsedValue | null => {
+    const match = /^([^\d]*)([\d,]+)(.*)$/.exec(raw);
+    if (!match) return null;
+    const [, prefix = '', digits = '', suffix = ''] = match;
+    return { prefix, target: Number(digits.replaceAll(',', '')), suffix };
+  };
+
+  const easeOutCubic = (progress: number): number => 1 - Math.pow(1 - progress, 3);
+
+  const run = (element: HTMLElement): void => {
+    const parsed = parse(element.dataset['count'] ?? '');
+    if (!parsed) return;
+    const start = performance.now();
+    const step = (now: number): void => {
+      const progress = Math.min((now - start) / DURATION_MS, 1);
+      const current = Math.round(parsed.target * easeOutCubic(progress));
+      element.textContent = `${parsed.prefix}${current.toLocaleString('en-US')}${parsed.suffix}`;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]): void => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) continue;
+          run(entry.target);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    for (const counter of counters) observer.observe(counter);
+  }
+</script>
