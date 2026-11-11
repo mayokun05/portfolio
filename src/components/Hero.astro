@@ -2,12 +2,17 @@
 import { Image } from 'astro:assets';
 import portrait from '../assets/profile/mayokun.jpg';
 import { profile } from '../data/profile';
+import { projects } from '../data/projects';
+import Shot from './Shot.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// The proof card shows the one dashboard that is live on a government platform.
+const live = projects.find((project) => project.liveUrl);
 ---
 
 <section class="hero">
   <div class="wrap grid">
     <div class="copy">
-      <p class="eyebrow">{profile.role}</p>
       <h1>{profile.headline}</h1>
       <p class="lede">{profile.about[0]}</p>
       <div class="actions">
@@ -16,34 +21,77 @@ import { profile } from '../data/profile';
       </div>
       <p class="meta"><span class="dot" aria-hidden="true"></span>{profile.availability} · {profile.location}</p>
     </div>
-    <div class="portrait">
-      <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[320, 480, 640]} sizes="(max-width: 900px) 60vw, 400px" loading="eager" />
+    <div class="visual">
+      <div class="portrait">
+        <Image src={portrait} alt={`Portrait of ${profile.name}`} widths={[320, 480, 640]} sizes="(max-width: 900px) 60vw, 400px" loading="eager" />
+      </div>
+      {
+        live && (
+          <a class="proof" href={`${base}/projects/${live.slug}/`}>
+            <Shot image={live.image} alt="" focus={{ x: 8, y: 14, zoom: 3 }} ratio={1} widths={[480, 720]} sizes="216px" loading="eager" />
+            <span class="proof-text">
+              <strong>Health Workforce Scorecard</strong>
+              <span>{live.liveUrl?.label}, Federal Ministry of Health</span>
+            </span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        )
+      }
     </div>
   </div>
 </section>
 
 <style>
-  .hero { padding: 56px 0 72px; }
+  .hero { padding: 48px 0 72px; }
   .grid { display: grid; gap: 40px; align-items: center; }
-  @media (min-width: 900px) { .hero { padding: 96px 0 112px; } .grid { grid-template-columns: 1.5fr 1fr; gap: 64px; } }
-  h1 { max-width: 20ch; }
+  @media (min-width: 900px) { .hero { padding: 88px 0 112px; } .grid { grid-template-columns: 1.35fr 1fr; gap: 72px; } }
+  h1 { font-size: clamp(2.6rem, 6.2vw, 4.6rem); line-height: 1.04; letter-spacing: -0.025em; max-width: 13ch; margin-bottom: 0.4em; }
+  .lede { max-width: 46ch; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 24px; }
   .meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.92rem; margin: 0; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #2f9e5b; box-shadow: 0 0 0 4px color-mix(in srgb, #2f9e5b 20%, transparent); flex: none; }
-  .portrait { justify-self: center; width: min(100%, 400px); }
-  /* Entrance on first load: the copy rises in a short stagger, the portrait settles in. */
+
+  .visual { position: relative; justify-self: center; width: min(100%, 400px); padding-bottom: 36px; }
+  .portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px; box-shadow: var(--shadow); }
+
+  /* A real dashboard crop pinned to the portrait: the proof sits next to the person. */
+  .proof {
+    position: absolute; left: -32px; bottom: 0; width: min(300px, 88%);
+    display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px;
+    padding: 10px 14px 10px 10px; border-radius: 16px;
+    background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px);
+    border: 1px solid var(--line); box-shadow: var(--shadow);
+    color: var(--text); text-decoration: none;
+    transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) ease;
+  }
+  .proof:hover, .proof:focus-visible { transform: translateY(-3px); border-color: var(--accent); }
+  .proof :global(.shot) { border-radius: 10px; border: 1px solid var(--line); }
+  .proof-text { display: grid; gap: 2px; line-height: 1.3; }
+  .proof-text strong { font-size: 0.9rem; font-weight: 600; }
+  .proof-text span { font-size: 0.78rem; color: var(--muted); }
+  .proof .arrow { color: var(--accent); }
+  .proof:hover strong { color: var(--accent); }
+
+  @media (max-width: 899px) {
+    .visual { order: -1; justify-self: start; width: min(70%, 280px); }
+    .proof { left: auto; right: -40%; width: 250px; }
+  }
+  @media (max-width: 479px) {
+    .visual { width: 62%; }
+    .proof { right: -52%; width: 220px; }
+  }
+
+  /* Entrance on first load: the copy rises in a short stagger, the portrait settles, then the proof card lands. */
   @media (prefers-reduced-motion: no-preference) {
     .copy > * { animation: rise var(--dur-slow) var(--ease-out) both; }
     .copy > :nth-child(2) { animation-delay: 80ms; }
     .copy > :nth-child(3) { animation-delay: 160ms; }
     .copy > :nth-child(4) { animation-delay: 240ms; }
-    .copy > :nth-child(5) { animation-delay: 320ms; }
     .portrait { animation: settle 900ms var(--ease-out) 120ms both; }
+    .proof { animation: rise var(--dur-slow) var(--ease-out) 520ms both; }
     .dot { animation: pulse 2.4s ease-in-out infinite; }
   }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   @keyframes settle { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
   @keyframes pulse { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, #2f9e5b 0%, transparent); } }
-  .portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px; box-shadow: var(--shadow); }
-  @media (max-width: 899px) { .portrait { order: -1; width: min(60%, 260px); justify-self: start; } }
 </style>

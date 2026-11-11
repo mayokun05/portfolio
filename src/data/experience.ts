@@ -17,7 +17,7 @@ export const experience: readonly Role[] = [
     title: 'Data Analyst',
     location: 'Federal Capital Territory',
     start: 'Jul 2026',
-    end: 'Present',
+    end: 'Nov 2026',
     track: 'analysis',
     highlights: [
       'Cleaned and analyzed a 1,990-respondent household survey in Excel: set the correct base for each question, built 20 frequency tables and 10 cross-tabulations with chi-square and Cramer’s V, verified 62 figures with zero mismatches, and wrote a findings report with seven recommendations for management.',

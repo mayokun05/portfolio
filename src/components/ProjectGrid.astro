@@ -7,9 +7,7 @@ const counts = new Map(allTools.map((tool) => [tool, projects.filter((project) =
 
 <section id="work" class="section">
   <div class="wrap">
-    <p class="eyebrow">Selected work</p>
     <h2>Case studies</h2>
-    <p class="lede">Production dashboards for Nigeria’s Federal Ministry of Health, followed by public and course datasets analyzed end to end: the question, the dashboard, the findings and what I would do about them.</p>
     <div class="filters" role="group" aria-label="Filter projects by tool">
       <button type="button" class="filter" aria-pressed="true" data-filter="all">All <span>{projects.length}</span></button>
       {
@@ -28,7 +26,7 @@ const counts = new Map(allTools.map((tool) => [tool, projects.filter((project) =
 </section>
 
 <style>
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 28px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 28px; }
   .filter { font: 500 0.9rem/1 var(--font-body); padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease, background var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
   .filter:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
   .filter:active { transform: scale(0.96); }

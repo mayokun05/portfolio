@@ -25,10 +25,10 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/mayokun-adeniran-05ama/',
   medium: 'https://medium.com/@adeniranmayo01',
   formspreeId: 'xoqgyooe',
-  headline: 'I turn messy operational data into decisions, and regulatory requirements into systems that pass audit.',
+  headline: 'Numbers that hold up. Compliance that passes audit.',
   about: [
     'I am a data analyst with 3+ years of experience building dashboards, data quality systems, survey datasets and automated reporting for government and enterprise organizations.',
-    'I am currently at Mshel Homes Limited. There I analyze household survey and customer service data in Excel, maintain a year-to-date client sentiment dataset, and run quarterly KPI reviews of business units. Before that, I delivered Tableau and Excel analytics across 37 Nigerian states for the Federal Ministry of Health.',
+    'At Mshel Homes Limited, I analyzed household survey and customer service data in Excel, maintained a year-to-date client sentiment dataset, and ran quarterly KPI reviews of business units. Before that, I delivered Tableau and Excel analytics across 37 Nigerian states for the Federal Ministry of Health.',
     'I also led regulatory compliance in Nigeria’s upstream oil and gas sector. I took a company through NCDMB and NipeX registration and audits, with a 100% compliance rating and zero non-compliance findings.',
     'My approach is the same in every sector: find what is broken in the data, fix it at the source, and write the method down so the next person can repeat it.',
   ],
