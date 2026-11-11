@@ -19,7 +19,7 @@ export interface ServiceLine {
 export const profile = {
   name: 'Mayokun Adeniran',
   role: 'Data Analyst and Regulatory Compliance Specialist',
-  location: 'Abuja, Nigeria',
+  location: 'Nigeria',
   availability: 'Open to remote contract and full-time work',
   email: 'adeniranmayo01@gmail.com',
   linkedin: 'https://www.linkedin.com/in/mayokun-adeniran-05ama/',
